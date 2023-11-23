@@ -17,6 +17,7 @@ class HelloJackRules : AppCompatActivity() {
 
         playButton = findViewById(R.id.playButton)
 
+
         playButton.setOnClickListener{
             val intent = Intent(this, PlayHelloJack::class.java)
             startActivity(intent)
