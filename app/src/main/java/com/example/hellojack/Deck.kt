@@ -28,7 +28,7 @@ class Deck {
     }
 
 
-    fun replaceFirstCard() {
+    fun replaceFirstCard(): Card {
         cards.removeAt(0)
         val suit = listOf("hearts", "diamonds", "clubs", "spades").shuffled().first()
         val rank = listOf(
@@ -47,6 +47,8 @@ class Deck {
             "king"
         ).shuffled().first()
         cards.add(0, Card(suit, rank))
+        val newCard = Card(suit,rank)
+        return newCard
     }
 }
 
