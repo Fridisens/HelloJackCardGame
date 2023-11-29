@@ -1,12 +1,17 @@
 package com.example.hellojack
 
 
+import com.example.hellojack.Player
+import com.example.hellojack.Opponent
+import com.example.hellojack.Table
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Handler
 
 
 
@@ -21,8 +26,19 @@ class PlayHelloJack : AppCompatActivity() {
     lateinit var buttonFor10: Button
     lateinit var currentCard: Card
 
+    lateinit var yourCardCountView : TextView
+    lateinit var opponentCardCountView : TextView
+    lateinit var onTableCardCountView : TextView
+
     lateinit var player: Player
-    lateinit var opponent1 : Opponent
+    lateinit var opponent: Opponent
+    lateinit var table: Table
+
+    private var tableCardCount: Int = 0
+    private var cardsPlayedThisRound: Int = 0
+
+    private val handler = Handler()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +49,7 @@ class PlayHelloJack : AppCompatActivity() {
         cardFrontView = findViewById(R.id.cardFrontView)
         deck = Deck()
 
+
         //Add OnClickListener for the Show card button
         val showCardButton = findViewById<Button>(R.id.showCardbutton)
         aceButton = findViewById(R.id.aceButton)
@@ -41,12 +58,28 @@ class PlayHelloJack : AppCompatActivity() {
         jackButton = findViewById(R.id.jackButton)
         buttonFor10 = findViewById(R.id.buttonFor10)
 
+        yourCardCountView = findViewById(R.id.yourCardCountView)
+        opponentCardCountView = findViewById(R.id.opponentCardCountView)
+        onTableCardCountView = findViewById(R.id.onTableCardCountView)
+
+
         // Add OnClickListener for each button
         aceButton.setOnClickListener { onSpecialButtonClick("ace") }
         kingButton.setOnClickListener { onSpecialButtonClick("king") }
         queenButton.setOnClickListener { onSpecialButtonClick("queen") }
         jackButton.setOnClickListener { onSpecialButtonClick("jack") }
         buttonFor10.setOnClickListener { onSpecialButtonClick("10") }
+
+        table = Table()
+        opponent = Opponent("Opponent", opponentCardCountView)
+        opponent.setTable(table)
+
+        player = Player("Du", yourCardCountView)
+        dealInitialCards()
+
+        placeCardOnTable()
+
+
 
         showCardButton.setOnClickListener {
             // Replace the current card and update the card´s image
@@ -63,6 +96,37 @@ class PlayHelloJack : AppCompatActivity() {
                 // Hide the buttons for special cards
                 hideSpecialButtons()
             }
+
+            player.makeMove("some_rank", currentCard)
+
+            // Uppdatera UI efter ditt drag
+            onTableCardCountView.text = "${table.cards.size}"
+            yourCardCountView.text = "${player.hand.size}"
+
+            cardsPlayedThisRound++
+
+            if(cardsPlayedThisRound == 2) {
+                cardsPlayedThisRound = 0
+
+                onTableCardCountView.text = "${table.cards.size}"
+
+            }
+
+            // Placera kortet på bordet med en fördröjning på 1000 millisekunder (1 sekund)
+            handler.postDelayed({
+                placeCardOnTable()
+
+                // Motståndarens drag med fördröjning
+                handler.postDelayed({
+                    opponent.makeMove()
+                    // Uppdatera UI efter motståndarens drag
+                    onTableCardCountView.text = "${table.cards.size}"
+                    opponentCardCountView.text = "${opponent.hand.size}"
+
+                    handler.postDelayed({
+                    }, 1000)
+                }, 1000)
+            }, 1000)
         }
     }
 
@@ -113,5 +177,38 @@ class PlayHelloJack : AppCompatActivity() {
         queenButton.visibility = View.GONE
         jackButton.visibility = View.GONE
         buttonFor10.visibility = View.GONE
+    }
+
+    private fun dealInitialCards(){
+        val playerCards = mutableListOf<Card>()
+        val opponentCards = mutableListOf<Card>()
+
+        //Divide the deck between players
+        val playerHandSize = deck.cards.size / 2
+        playerCards.addAll(deck.cards.take(playerHandSize))
+        opponentCards.addAll(deck.cards.takeLast(playerHandSize))
+
+        tableCardCount = 0
+
+        // Assign card to player and opponent
+        player.receiveInitialCards(playerCards)
+        opponent.receiveInitialCards(opponentCards)
+
+        //Update how many cards each "hands"
+        yourCardCountView.text = "${playerCards.size}"
+        opponentCardCountView.text = "${opponentCards.size}"
+
+    }
+
+    private fun placeCardOnTable(){
+
+        val playedCard = player.playCard()
+
+        if(playedCard!= null){
+            table.addCard(playedCard)
+
+            yourCardCountView.text = "${player.hand.size}"
+            onTableCardCountView.text = "${table.cards.size}"
+        }
     }
 }

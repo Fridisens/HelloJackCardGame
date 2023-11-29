@@ -19,9 +19,10 @@
 
     <TextView
         android:id="@+id/ruleView"
-        android:layout_width="113dp"
+        android:layout_width="327dp"
         android:layout_height="21dp"
         android:text="Rules:"
+        android:textAlignment="center"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,40 +34,44 @@
         android:layout_height="27dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="1dp"
-        android:text="Divide the deck between the opponents"
+        android:text="Divide the deck between the players"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ruleView" />
 
     <TextView
         android:id="@+id/rulesView3"
-        android:layout_width="334dp"
-        android:layout_height="29dp"
+        android:layout_width="327dp"
+        android:layout_height="27dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="1dp"
         android:text="Press the right icon for each rule:"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ruleView2" />
 
     <TextView
         android:id="@+id/rulesView4"
-        android:layout_width="334dp"
-        android:layout_height="23dp"
+        android:layout_width="327dp"
+        android:layout_height="27dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="1dp"
         android:text="If you get a 10 - Whistle"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rulesView3" />
 
     <TextView
         android:id="@+id/rulesView5"
-        android:layout_width="278dp"
-        android:layout_height="23dp"
+        android:layout_width="327dp"
+        android:layout_height="27dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="6dp"
         android:text="If you get a queen - G´day Queen"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.315"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,10 +79,11 @@
 
     <TextView
         android:id="@+id/rulesView6"
-        android:layout_width="277dp"
-        android:layout_height="26dp"
+        android:layout_width="327dp"
+        android:layout_height="27dp"
         android:layout_marginStart="30dp"
         android:text="If you get a king - Stand up and salute"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.246"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,11 +91,12 @@
 
     <TextView
         android:id="@+id/rulesView7"
-        android:layout_width="282dp"
-        android:layout_height="28dp"
+        android:layout_width="327dp"
+        android:layout_height="27dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="5dp"
         android:text="If you get a Jack - Hello Jack"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.302"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,11 +104,12 @@
 
     <TextView
         android:id="@+id/rulesView8"
-        android:layout_width="264dp"
+        android:layout_width="327dp"
         android:layout_height="27dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="6dp"
         android:text="If you get an Ace - press the Ace button"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.205"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,11 +117,12 @@
 
     <TextView
         android:id="@+id/rulesView9"
-        android:layout_width="344dp"
-        android:layout_height="34dp"
+        android:layout_width="327dp"
+        android:layout_height="27dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:text="Press each button the fastest you can to win!"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
@@ -121,22 +130,24 @@
 
     <TextView
         android:id="@+id/rulesView10"
-        android:layout_width="339dp"
-        android:layout_height="47dp"
+        android:layout_width="328dp"
+        android:layout_height="41dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="72dp"
         android:text="If you are the slowest, you will have to pick up all the cards on the table"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rulesView9" />
 
     <TextView
         android:id="@+id/rulesView11"
-        android:layout_width="289dp"
-        android:layout_height="43dp"
+        android:layout_width="327dp"
+        android:layout_height="41dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="76dp"
         android:text="The game is over when the first person has no more cards!"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
