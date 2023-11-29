@@ -12,7 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Handler
-
+import android.os.Looper
 
 
 class PlayHelloJack : AppCompatActivity() {
@@ -34,10 +34,11 @@ class PlayHelloJack : AppCompatActivity() {
     lateinit var opponent: Opponent
     lateinit var table: Table
 
+    private var opponentChoice: String = ""
     private var tableCardCount: Int = 0
     private var cardsPlayedThisRound: Int = 0
+    private val handler = Handler(Looper.getMainLooper())
 
-    private val handler = Handler()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,34 +100,35 @@ class PlayHelloJack : AppCompatActivity() {
 
             player.makeMove("some_rank", currentCard)
 
-            // Uppdatera UI efter ditt drag
+            // Update UI after my own move
             onTableCardCountView.text = "${table.cards.size}"
             yourCardCountView.text = "${player.hand.size}"
 
             cardsPlayedThisRound++
 
-            if(cardsPlayedThisRound == 2) {
+            if (cardsPlayedThisRound == 2) {
                 cardsPlayedThisRound = 0
 
-                onTableCardCountView.text = "${table.cards.size}"
 
-            }
-
-            // Placera kortet på bordet med en fördröjning på 1000 millisekunder (1 sekund)
-            handler.postDelayed({
-                placeCardOnTable()
-
-                // Motståndarens drag med fördröjning
+                // Place the card with 1 sec delay
                 handler.postDelayed({
-                    opponent.makeMove()
-                    // Uppdatera UI efter motståndarens drag
-                    onTableCardCountView.text = "${table.cards.size}"
-                    opponentCardCountView.text = "${opponent.hand.size}"
+                    placeCardOnTable()
 
+                    onTableCardCountView.text = "${table.cards.size}"
+
+                    // Opponents move with delay
                     handler.postDelayed({
+                        opponent.makeMove()
+
+                        // Uppdatera UI efter motståndarens drag
+                        onTableCardCountView.text = "${table.cards.size}"
+                        opponentCardCountView.text = "${opponent.hand.size}"
+
+                        handler.postDelayed({
+                        }, 1000)
                     }, 1000)
                 }, 1000)
-            }, 1000)
+            }
         }
     }
 
@@ -145,6 +147,8 @@ class PlayHelloJack : AppCompatActivity() {
             val message = "You weren't fast enough! You get to pick up all the cards!"
             showToast(message)
         }
+
+        simulateOpponentChoice()
     }
 
     // Display a toast message
@@ -209,6 +213,16 @@ class PlayHelloJack : AppCompatActivity() {
 
             yourCardCountView.text = "${player.hand.size}"
             onTableCardCountView.text = "${table.cards.size}"
+        }
+    }
+
+    private fun simulateOpponentChoice() {
+
+        if (opponentChoice.isEmpty()) {
+            val rankValues = listOf("ace", "king", "queen", "jack", "10")
+            opponentChoice = rankValues.random()
+
+            onSpecialButtonClick(opponentChoice)
         }
     }
 }
