@@ -1,11 +1,34 @@
 package com.example.hellojack
 
-class Opponent (val name: String) {
+import android.widget.TextView
 
-    var wins: Int = 0
-    var losses: Int = 0
+class Opponent (val name: String, private val opponentCardCountView: TextView) {
 
-    fun makeMove (opponentCard: Card?, playerRank: String) {
+    val hand: MutableList<Card> = mutableListOf()
+    private  lateinit var table: Table
+
+
+    fun setTable (table: Table){
+        this.table = table
+    }
+
+
+    fun receiveInitialCards(cards:List<Card>){
+        hand.clear()
+        hand.addAll(cards)
+        updateCardCount()
+    }
+
+    private fun updateCardCount() {
+        opponentCardCountView.text = "${hand.size}"
+    }
+
+    fun makeMove() {
+        if (hand.isNotEmpty()){
+            val playedCard = hand.removeAt(0)
+            table.addCard(playedCard)
+            updateCardCount()
+        }
 
     }
 }
