@@ -34,6 +34,7 @@ class PlayHelloJack : AppCompatActivity() {
     lateinit var opponent: Opponent
     lateinit var table: Table
 
+    private var isPlayerTurn = true
     private var opponentChoice: String = ""
     private var tableCardCount: Int = 0
     private var cardsPlayedThisRound: Int = 0
@@ -109,6 +110,8 @@ class PlayHelloJack : AppCompatActivity() {
             if (cardsPlayedThisRound == 2) {
                 cardsPlayedThisRound = 0
 
+                onTableCardCountView.text = "${table.cards.size}"
+
 
                 // Place the card with 1 sec delay
                 handler.postDelayed({
@@ -136,19 +139,26 @@ class PlayHelloJack : AppCompatActivity() {
     private fun onSpecialButtonClick(rank: String) {
         val latestCard = deck.cards.lastOrNull()
 
-        if (latestCard != null && latestCard.rank == rank && :: currentCard.isInitialized) {
-            // Player pressed the correct button
-
-            val message = "You pressed the button for $rank and were the fastest!"
+        if (latestCard != null && latestCard.rank == rank && ::currentCard.isInitialized) {
+            // Player or opponent pressed the right button
+            val message = if (isPlayerTurn) {
+                "You pressed the button for $rank and were the fastest!"
+            } else {
+                "Opponent pressed the button for $rank and was the fastest!"
+            }
             showToast(message)
         } else {
-            // Player pressed the wrong button
-
-            val message = "You weren't fast enough! You get to pick up all the cards!"
+            // Player or opponent pressed the wrong button
+            val message = if (isPlayerTurn) {
+                "You weren't fast enough! You get to pick up all the cards!"
+            } else {
+                "Opponent wasn't fast enough! They get to pick up all the cards!"
+            }
             showToast(message)
         }
 
-        simulateOpponentChoice()
+        // Update Boolean for who´s turn it is
+        isPlayerTurn = !isPlayerTurn
     }
 
     // Display a toast message
@@ -222,7 +232,11 @@ class PlayHelloJack : AppCompatActivity() {
             val rankValues = listOf("ace", "king", "queen", "jack", "10")
             opponentChoice = rankValues.random()
 
-            onSpecialButtonClick(opponentChoice)
+            if(!isPlayerTurn){
+                onSpecialButtonClick(opponentChoice)
+
+            }
         }
     }
+
 }
