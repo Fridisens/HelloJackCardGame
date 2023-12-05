@@ -31,6 +31,8 @@ class Opponent (val name: String, private val opponentCardCountView: TextView) {
             return playedCard
         }
         return null
+    }
+    fun pickUpCardsForLoserRound(cards: MutableList<Card>) {
 
     }
 }

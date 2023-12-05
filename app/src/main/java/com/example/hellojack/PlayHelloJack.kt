@@ -1,6 +1,7 @@
 package com.example.hellojack
 
 
+import android.content.Intent
 import com.example.hellojack.Player
 import com.example.hellojack.Opponent
 import com.example.hellojack.Table
@@ -42,7 +43,6 @@ class PlayHelloJack : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play_hello_jack)
@@ -82,7 +82,6 @@ class PlayHelloJack : AppCompatActivity() {
 
         //placeCardOnTable()
 
-
         var playerLastCardSpecial = false
         showCardButton.setOnClickListener {
             // Replace the current card and update the card´s image
@@ -114,6 +113,13 @@ class PlayHelloJack : AppCompatActivity() {
             onTableCardCountView.text = "${table.cards.size}"
             yourCardCountView.text = "${player.hand.size}"
 
+            if (player.hand.isEmpty() || opponent.hand.isEmpty()) {
+                val winnerIntent = Intent(this, WinnerLoserAnnouncement::class.java)
+                winnerIntent.putExtra("winner", if (player.hand.isEmpty()) "Opponent" else "Player")
+                startActivity(winnerIntent)
+
+            }
+
             //cardsPlayedThisRound++
                 //if (cardsPlayedThisRound == 1) {
                 //cardsPlayedThisRound = 0
@@ -123,9 +129,6 @@ class PlayHelloJack : AppCompatActivity() {
 
                 // Place the card with 1 sec delay
                 handler.postDelayed({
-
-
-
                     onTableCardCountView.text = "${table.cards.size}"
 
                     // Opponents move with delay
@@ -146,6 +149,8 @@ class PlayHelloJack : AppCompatActivity() {
                             // Hide the buttons for special cards
                             hideSpecialButtons()
                         }
+
+
                         //opponent.makeMove()
 
                         // Uppdatera UI efter motståndarens drag
@@ -153,6 +158,7 @@ class PlayHelloJack : AppCompatActivity() {
                         opponentCardCountView.text = "${opponent.hand.size}"
 
                         handler.postDelayed({
+
                         }, 1000)
                     }, 1000)
                 }, 1000)
@@ -261,6 +267,7 @@ class PlayHelloJack : AppCompatActivity() {
         }
     }
 
+
     private fun simulateOpponentChoice() {
 
         if (opponentChoice.isEmpty()) {
@@ -271,7 +278,25 @@ class PlayHelloJack : AppCompatActivity() {
                 onSpecialButtonClick(opponentChoice)
 
             }
+
         }
+
     }
+
+
+
+//    private fun pickUpCardsForLoserOfRound(){
+//        showToast("Player who pressed last gets to pick up the cards")
+//        if (lastSpecialCardPresser == "Player"){
+//            player.pickUpCardsForLoserRound(table.cards)
+//            yourCardCountView.text = "${player.hand.size}"
+//        } else if (lastSpecialCardPresser =="Opponent"){
+//            opponent.pickUpCardsForLoserRound(table.cards)
+//            opponentCardCountView.text = "${opponent.hand.size}"
+//        }
+//        table.clearTable()
+//        onTableCardCountView.text = "0"
+//
+//    }
 
 }
