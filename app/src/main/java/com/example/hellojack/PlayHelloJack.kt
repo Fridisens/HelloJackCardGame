@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 
 
 class PlayHelloJack : AppCompatActivity() {
@@ -79,13 +80,16 @@ class PlayHelloJack : AppCompatActivity() {
         player = Player("Du", yourCardCountView)
         dealInitialCards()
 
-        placeCardOnTable()
+        //placeCardOnTable()
 
 
-
+        var playerLastCardSpecial = false
         showCardButton.setOnClickListener {
             // Replace the current card and update the card´s image
-            replaceAndShowCard()
+
+            if (!playerLastCardSpecial) {
+                replaceAndShowCard()
+                placeCardOnTablePlayer()
 
             // Check if the new card is a special card
             if (currentCard.rank == "ace" || currentCard.rank == "10" ||
@@ -93,35 +97,56 @@ class PlayHelloJack : AppCompatActivity() {
                 currentCard.rank == "king"
             ) {
                 // Show the buttons for special cards
+                playerLastCardSpecial = true
                 showSpecialButtons()
+                return@setOnClickListener
             } else {
                 // Hide the buttons for special cards
+                playerLastCardSpecial = false
                 hideSpecialButtons()
             }
+            }
+            playerLastCardSpecial = false
 
-            player.makeMove("some_rank", currentCard)
+            //player.makeMove("some_rank", currentCard)
 
             // Update UI after my own move
             onTableCardCountView.text = "${table.cards.size}"
             yourCardCountView.text = "${player.hand.size}"
 
-            cardsPlayedThisRound++
-
-            if (cardsPlayedThisRound == 2) {
-                cardsPlayedThisRound = 0
+            //cardsPlayedThisRound++
+                //if (cardsPlayedThisRound == 1) {
+                //cardsPlayedThisRound = 0
 
                 onTableCardCountView.text = "${table.cards.size}"
 
 
                 // Place the card with 1 sec delay
                 handler.postDelayed({
-                    placeCardOnTable()
+
+
 
                     onTableCardCountView.text = "${table.cards.size}"
 
                     // Opponents move with delay
                     handler.postDelayed({
-                        opponent.makeMove()
+                        //replaceAndShowCard()
+                        // Replace the current card and update the card´s image
+                        replaceAndShowCard()
+                        placeCardOnTableOpponent()
+
+                        // Check if the new card is a special card
+                        if (currentCard.rank == "ace" || currentCard.rank == "10" ||
+                            currentCard.rank == "jack" || currentCard.rank == "queen" ||
+                            currentCard.rank == "king"
+                        ) {
+                            // Show the buttons for special cards
+                            showSpecialButtons()
+                        } else {
+                            // Hide the buttons for special cards
+                            hideSpecialButtons()
+                        }
+                        //opponent.makeMove()
 
                         // Uppdatera UI efter motståndarens drag
                         onTableCardCountView.text = "${table.cards.size}"
@@ -131,7 +156,7 @@ class PlayHelloJack : AppCompatActivity() {
                         }, 1000)
                     }, 1000)
                 }, 1000)
-            }
+                //}
         }
     }
 
@@ -214,14 +239,24 @@ class PlayHelloJack : AppCompatActivity() {
 
     }
 
-    private fun placeCardOnTable(){
-
+    private fun placeCardOnTablePlayer(){
         val playedCard = player.playCard()
-
         if(playedCard!= null){
             table.addCard(playedCard)
 
             yourCardCountView.text = "${player.hand.size}"
+            onTableCardCountView.text = "${table.cards.size}"
+        }
+
+
+    }
+
+    private fun placeCardOnTableOpponent() {
+        val opponentPlayedCard = opponent.makeMove()
+        if(opponentPlayedCard!= null){
+            table.addCard(opponentPlayedCard)
+
+            opponentCardCountView.text = "${opponent.hand.size}"
             onTableCardCountView.text = "${table.cards.size}"
         }
     }

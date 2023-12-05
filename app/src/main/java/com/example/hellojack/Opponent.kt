@@ -23,12 +23,14 @@ class Opponent (val name: String, private val opponentCardCountView: TextView) {
         opponentCardCountView.text = "${hand.size}"
     }
 
-    fun makeMove() {
+    fun makeMove(): Card? {
         if (hand.isNotEmpty()){
             val playedCard = hand.removeAt(0)
-            table.addCard(playedCard)
+            //table.addCard(playedCard)
             updateCardCount()
+            return playedCard
         }
+        return null
 
     }
 }
