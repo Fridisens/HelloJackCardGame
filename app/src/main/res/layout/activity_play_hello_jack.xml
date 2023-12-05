@@ -79,7 +79,7 @@
         app:layout_constraintHorizontal_bias="0.094"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/clubsace" />
+        app:srcCompat="@drawable/cardback" />
 
     <ImageView
         android:id="@+id/cardBackView"
