@@ -33,4 +33,8 @@ class Player (val name: String, private val yourCardCountView: TextView) {
     fun makeMove (selectedRank: String, currentCard: Card){
 
     }
+
+    fun pickUpCardsForLoserRound(cards: MutableList<Card>) {
+
+    }
 }
