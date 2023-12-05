@@ -41,6 +41,8 @@ class PlayHelloJack : AppCompatActivity() {
     private var tableCardCount: Int = 0
     private var cardsPlayedThisRound: Int = 0
     private val handler = Handler(Looper.getMainLooper())
+    private var isFirstCardShown = false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,23 +111,24 @@ class PlayHelloJack : AppCompatActivity() {
 
             //player.makeMove("some_rank", currentCard)
 
+
             // Update UI after my own move
             onTableCardCountView.text = "${table.cards.size}"
             yourCardCountView.text = "${player.hand.size}"
 
+            // Next activity when we reach a winner
             if (player.hand.isEmpty() || opponent.hand.isEmpty()) {
                 val winnerIntent = Intent(this, WinnerLoserAnnouncement::class.java)
                 winnerIntent.putExtra("winner", if (player.hand.isEmpty()) "Opponent" else "Player")
                 startActivity(winnerIntent)
-
             }
 
             //cardsPlayedThisRound++
                 //if (cardsPlayedThisRound == 1) {
                 //cardsPlayedThisRound = 0
 
-                onTableCardCountView.text = "${table.cards.size}"
 
+                onTableCardCountView.text = "${table.cards.size}"
 
                 // Place the card with 1 sec delay
                 handler.postDelayed({
@@ -178,6 +181,7 @@ class PlayHelloJack : AppCompatActivity() {
                 "Opponent pressed the button for $rank and was the fastest!"
             }
             showToast(message)
+
         } else {
             // Player or opponent pressed the wrong button
             val message = if (isPlayerTurn) {
