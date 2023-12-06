@@ -33,10 +33,6 @@ class Player (private val yourCardCountView: TextView) {
         updateCardCount()
     }
 
-    fun makeMove(selectedRank: String, currentCard: Card) {
-
-    }
-
     fun pickUpCardsForLoserRound(cards: List<Card>) {
         hand.addAll(cards)
         updateCardCount()

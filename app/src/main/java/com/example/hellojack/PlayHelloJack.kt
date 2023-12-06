@@ -2,9 +2,6 @@ package com.example.hellojack
 
 
 import android.content.Intent
-import com.example.hellojack.Player
-import com.example.hellojack.Opponent
-import com.example.hellojack.Table
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -19,29 +16,29 @@ import android.util.Log
 
 class PlayHelloJack : AppCompatActivity() {
 
+    // UI elements
     lateinit var cardFrontView: ImageView
-    lateinit var deck: Deck
     lateinit var aceButton: Button
     lateinit var kingButton: Button
     lateinit var queenButton: Button
     lateinit var jackButton: Button
     lateinit var buttonFor10: Button
-    lateinit var currentCard: Card
 
     lateinit var yourCardCountView : TextView
     lateinit var opponentCardCountView : TextView
     lateinit var onTableCardCountView : TextView
 
+    //Game components
     lateinit var player: Player
     lateinit var opponent: Opponent
     lateinit var table: Table
+    lateinit var currentCard: Card
+    lateinit var deck: Deck
 
+    //Game state variables
     private var isPlayerTurn = true
-    private var opponentChoice: String = ""
     private var tableCardCount: Int = 0
     private val handler = Handler(Looper.getMainLooper())
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,21 +48,14 @@ class PlayHelloJack : AppCompatActivity() {
 
         // Initialize UI elements and the deck
         cardFrontView = findViewById(R.id.cardFrontView)
-        deck = Deck()
-
-
-        //Add OnClickListener for the Special card-button
-        val showCardButton = findViewById<Button>(R.id.showCardbutton)
         aceButton = findViewById(R.id.aceButton)
         kingButton = findViewById(R.id.kingButton)
         queenButton = findViewById(R.id.queenButton)
         jackButton = findViewById(R.id.jackButton)
         buttonFor10 = findViewById(R.id.buttonFor10)
-
         yourCardCountView = findViewById(R.id.yourCardCountView)
         opponentCardCountView = findViewById(R.id.opponentCardCountView)
         onTableCardCountView = findViewById(R.id.onTableCardCountView)
-
 
         // Add OnClickListener for each Special Card-button
         aceButton.setOnClickListener { onSpecialButtonClick("ace") }
@@ -74,19 +64,22 @@ class PlayHelloJack : AppCompatActivity() {
         jackButton.setOnClickListener { onSpecialButtonClick("jack") }
         buttonFor10.setOnClickListener { onSpecialButtonClick("10") }
 
+        //Initialize game components
+        deck = Deck()
         table = Table()
         opponent = Opponent(opponentCardCountView)
         opponent.setTable(table)
-
         player = Player (yourCardCountView)
+
         dealInitialCards()
 
-        //placeCardOnTable()
 
+        val showCardButton = findViewById<Button>(R.id.showCardbutton)
         var playerLastCardSpecial = false
-        showCardButton.setOnClickListener {
-            // Replace the current card and update the card´s image
 
+        showCardButton.setOnClickListener {
+
+            // Replace the current card and update the card´s image
             if (!playerLastCardSpecial) {
                 replaceAndShowCard()
                 placeCardOnTablePlayer()
@@ -108,9 +101,6 @@ class PlayHelloJack : AppCompatActivity() {
             }
             playerLastCardSpecial = false
 
-            //player.makeMove("some_rank", currentCard)
-
-
             // Update UI after my own move
             onTableCardCountView.text = "${table.cards.size}"
             yourCardCountView.text = "${player.hand.size}"
@@ -120,32 +110,22 @@ class PlayHelloJack : AppCompatActivity() {
                 checkForWinner()
                 return@setOnClickListener
             }
-            // delay opponents move to push special card-button between 1-10 sec
+            // delay opponents move to hit a special card-button between 1-10 sec
             val delayInMillis = (1..5).random() * 1000L
 
-            // Next activity when we reach a winner
-//            if (player.hand.isEmpty() || opponent.hand.isEmpty()) {
-//                val winnerIntent = Intent(this, WinnerLoserAnnouncement::class.java)
-//                winnerIntent.putExtra("winner", if (player.hand.isEmpty()) "Player" else "Opponent")
-//                startActivity(winnerIntent)
-//                finish()
-//                return@setOnClickListener
-//            }
 
-            //cardsPlayedThisRound++
-            //if (cardsPlayedThisRound == 1) {
-            //cardsPlayedThisRound = 0
+            //onTableCardCountView.text = "${table.cards.size}"
 
-
-            onTableCardCountView.text = "${table.cards.size}"
-
-            // Place the card with 1 sec delay
+            // Place the card with 1 sec delay from players move
             handler.postDelayed({
                 onTableCardCountView.text = "${table.cards.size}"
 
                 // Opponents move with delay
                 handler.postDelayed({
+
                     //replaceAndShowCard()
+
+
                     // Replace the current card and update the card´s image
                     replaceAndShowCard()
                     placeCardOnTableOpponent()
@@ -251,6 +231,8 @@ class PlayHelloJack : AppCompatActivity() {
         buttonFor10.visibility = View.GONE
     }
 
+
+    //Distributes the initial cards between the player and opponent, update each card count
     private fun dealInitialCards(){
         val playerCards = mutableListOf<Card>()
         val opponentCards = mutableListOf<Card>()
@@ -272,6 +254,8 @@ class PlayHelloJack : AppCompatActivity() {
 
     }
 
+
+    //Handles players move, updating players card and table count
     private fun placeCardOnTablePlayer(){
         val playedCard = player.playCard()
         if(playedCard!= null){
@@ -284,6 +268,7 @@ class PlayHelloJack : AppCompatActivity() {
 
     }
 
+    //Handles opponents move, updating opponent card count and table count
     private fun placeCardOnTableOpponent() {
         val opponentPlayedCard = opponent.makeMove()
         if(opponentPlayedCard!= null){
@@ -293,24 +278,6 @@ class PlayHelloJack : AppCompatActivity() {
             onTableCardCountView.text = "${table.cards.size}"
         }
     }
-
-
-//    private fun simulateOpponentChoice() {
-//
-//        if (opponentChoice.isEmpty()) {
-//            val rankValues = listOf("ace", "king", "queen", "jack", "10")
-//            opponentChoice = rankValues.random()
-//
-//            if(!isPlayerTurn){
-//                onSpecialButtonClick(opponentChoice)
-//
-//            }
-//
-//     }
-
-    //}
-
-
 
     private fun pickUpTheCardsForLoserRound(){
 
@@ -326,6 +293,7 @@ class PlayHelloJack : AppCompatActivity() {
 
     }
 
+    //Checks if either the player or opponent has an empty hand, initiates the winner/loser activity
     private fun checkForWinner() {
         if (player.hand.isEmpty() || opponent.hand.isEmpty()) {
             val winnerIntent = Intent(this, WinnerLoserAnnouncement::class.java)
