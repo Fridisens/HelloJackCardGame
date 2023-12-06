@@ -7,11 +7,11 @@ class Opponent (private val opponentCardCountView: TextView) {
     var hand: MutableList<Card> = mutableListOf()
     private lateinit var table: Table
 
-
-    fun addToHand(cards: List<Card>){
-        hand.addAll(cards)
-        updateCardCount()
-    }
+//
+//    fun addToHand(cards: List<Card>){
+//        hand.addAll(cards)
+//        updateCardCount()
+//    }
 
 
     fun setTable (table: Table){

@@ -28,10 +28,10 @@ class Player (private val yourCardCountView: TextView) {
         return null
     }
 
-    fun addToHand(cards: List<Card>) {
-        hand.addAll(cards)
-        updateCardCount()
-    }
+//    fun addToHand(cards: List<Card>) {
+//        hand.addAll(cards)
+//        updateCardCount()
+//    }
 
     fun pickUpCardsForLoserRound(cards: List<Card>) {
         hand.addAll(cards)
