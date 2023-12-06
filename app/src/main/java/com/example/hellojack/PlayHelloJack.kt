@@ -39,9 +39,8 @@ class PlayHelloJack : AppCompatActivity() {
     private var isPlayerTurn = true
     private var opponentChoice: String = ""
     private var tableCardCount: Int = 0
-    //private var cardsPlayedThisRound: Int = 0
     private val handler = Handler(Looper.getMainLooper())
-    //private var isFirstCardShown = false
+
 
 
 
@@ -92,20 +91,20 @@ class PlayHelloJack : AppCompatActivity() {
                 replaceAndShowCard()
                 placeCardOnTablePlayer()
 
-            // Check if the new card is a special card
-            if (currentCard.rank == "ace" || currentCard.rank == "10" ||
-                currentCard.rank == "jack" || currentCard.rank == "queen" ||
-                currentCard.rank == "king"
-            ) {
-                // Show the buttons for special cards
-                playerLastCardSpecial = true
-                showSpecialButtons()
-                return@setOnClickListener
-            } else {
-                // Hide the buttons for special cards
-                playerLastCardSpecial = false
-                hideSpecialButtons()
-            }
+                // Check if the new card is a special card
+                if (currentCard.rank == "ace" || currentCard.rank == "10" ||
+                    currentCard.rank == "jack" || currentCard.rank == "queen" ||
+                    currentCard.rank == "king"
+                ) {
+                    // Show the buttons for special cards
+                    playerLastCardSpecial = true
+                    showSpecialButtons()
+                    return@setOnClickListener
+                } else {
+                    // Hide the buttons for special cards
+                    playerLastCardSpecial = false
+                    hideSpecialButtons()
+                }
             }
             playerLastCardSpecial = false
 
@@ -116,56 +115,65 @@ class PlayHelloJack : AppCompatActivity() {
             onTableCardCountView.text = "${table.cards.size}"
             yourCardCountView.text = "${player.hand.size}"
 
-            // Next activity when we reach a winner
-            if (player.hand.isEmpty() || opponent.hand.isEmpty()) {
-                val winnerIntent = Intent(this, WinnerLoserAnnouncement::class.java)
-                winnerIntent.putExtra("winner", if (player.hand.isEmpty()) "Opponent" else "Player")
-                startActivity(winnerIntent)
+
+            if (player.hand.isEmpty() || opponent.hand.isEmpty()){
+                checkForWinner()
+                return@setOnClickListener
             }
+            // delay opponents move to push special card-button between 1-10 sec
+            val delayInMillis = (1..5).random() * 1000L
+
+            // Next activity when we reach a winner
+//            if (player.hand.isEmpty() || opponent.hand.isEmpty()) {
+//                val winnerIntent = Intent(this, WinnerLoserAnnouncement::class.java)
+//                winnerIntent.putExtra("winner", if (player.hand.isEmpty()) "Player" else "Opponent")
+//                startActivity(winnerIntent)
+//                finish()
+//                return@setOnClickListener
+//            }
 
             //cardsPlayedThisRound++
-                //if (cardsPlayedThisRound == 1) {
-                //cardsPlayedThisRound = 0
+            //if (cardsPlayedThisRound == 1) {
+            //cardsPlayedThisRound = 0
 
 
+            onTableCardCountView.text = "${table.cards.size}"
+
+            // Place the card with 1 sec delay
+            handler.postDelayed({
                 onTableCardCountView.text = "${table.cards.size}"
 
-                // Place the card with 1 sec delay
+                // Opponents move with delay
                 handler.postDelayed({
+                    //replaceAndShowCard()
+                    // Replace the current card and update the card´s image
+                    replaceAndShowCard()
+                    placeCardOnTableOpponent()
+
+                    // Check if the new card is a special card
+                    if (currentCard.rank == "ace" || currentCard.rank == "10" ||
+                        currentCard.rank == "jack" || currentCard.rank == "queen" ||
+                        currentCard.rank == "king"
+                    ) {
+                        // Show the buttons for special cards
+                        showSpecialButtons()
+                    } else {
+                        // Hide the buttons for special cards
+                        hideSpecialButtons()
+                    }
+
+                    checkForWinner()
+
+                    // Uppdatera UI efter motståndarens drag
                     onTableCardCountView.text = "${table.cards.size}"
+                    opponentCardCountView.text = "${opponent.hand.size}"
 
-                    // Opponents move with delay
                     handler.postDelayed({
-                        //replaceAndShowCard()
-                        // Replace the current card and update the card´s image
-                        replaceAndShowCard()
-                        placeCardOnTableOpponent()
 
-                        // Check if the new card is a special card
-                        if (currentCard.rank == "ace" || currentCard.rank == "10" ||
-                            currentCard.rank == "jack" || currentCard.rank == "queen" ||
-                            currentCard.rank == "king"
-                        ) {
-                            // Show the buttons for special cards
-                            showSpecialButtons()
-                        } else {
-                            // Hide the buttons for special cards
-                            hideSpecialButtons()
-                        }
-
-
-                        //opponent.makeMove()
-
-                        // Uppdatera UI efter motståndarens drag
-                        onTableCardCountView.text = "${table.cards.size}"
-                        opponentCardCountView.text = "${opponent.hand.size}"
-
-                        handler.postDelayed({
-
-                        }, 1000)
-                    }, 1000)
+                    }, delayInMillis)
                 }, 1000)
-                //}
+            }, 1000)
+            //}
         }
     }
 
@@ -185,15 +193,15 @@ class PlayHelloJack : AppCompatActivity() {
             //New test for pick up the cards on table
             if (isPlayerTurn) {
                 player.addToHand (table.cards)
-                    yourCardCountView.text = "${player.hand.size}"
-                }else {
+                yourCardCountView.text = "${player.hand.size}"
+            }else {
                 opponent.addToHand(table.cards)
                 opponentCardCountView.text = "${opponent.hand.size}"
 
-                }
+            }
 
-                table.clearTable()
-                onTableCardCountView.text = "0"
+            table.clearTable()
+            onTableCardCountView.text = "0"
 
         } else {
             // Player or opponent pressed the wrong button
@@ -258,7 +266,7 @@ class PlayHelloJack : AppCompatActivity() {
         player.receiveInitialCards(playerCards)
         opponent.receiveInitialCards(opponentCards)
 
-        //Update how many cards each "hands"
+        //Update how many cards in each "hand"
         yourCardCountView.text = "${playerCards.size}"
         opponentCardCountView.text = "${opponentCards.size}"
 
@@ -287,20 +295,20 @@ class PlayHelloJack : AppCompatActivity() {
     }
 
 
-    private fun simulateOpponentChoice() {
+//    private fun simulateOpponentChoice() {
+//
+//        if (opponentChoice.isEmpty()) {
+//            val rankValues = listOf("ace", "king", "queen", "jack", "10")
+//            opponentChoice = rankValues.random()
+//
+//            if(!isPlayerTurn){
+//                onSpecialButtonClick(opponentChoice)
+//
+//            }
+//
+//     }
 
-        if (opponentChoice.isEmpty()) {
-            val rankValues = listOf("ace", "king", "queen", "jack", "10")
-            opponentChoice = rankValues.random()
-
-            if(!isPlayerTurn){
-                onSpecialButtonClick(opponentChoice)
-
-            }
-
-        }
-
-    }
+    //}
 
 
 
@@ -316,6 +324,15 @@ class PlayHelloJack : AppCompatActivity() {
         table.clearTable()
         onTableCardCountView.text = "0"
 
+    }
+
+    private fun checkForWinner() {
+        if (player.hand.isEmpty() || opponent.hand.isEmpty()) {
+            val winnerIntent = Intent(this, WinnerLoserAnnouncement::class.java)
+            winnerIntent.putExtra("winner", if (player.hand.isEmpty()) "Player" else "Opponent")
+            startActivity(winnerIntent)
+            finish()
+        }
     }
 
 }
