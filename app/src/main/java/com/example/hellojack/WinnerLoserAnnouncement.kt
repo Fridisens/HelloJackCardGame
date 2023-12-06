@@ -30,7 +30,5 @@ class WinnerLoserAnnouncement : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
-
     }
 }
