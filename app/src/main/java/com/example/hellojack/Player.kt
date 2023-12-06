@@ -2,25 +2,25 @@ package com.example.hellojack
 
 import android.widget.TextView
 
-class Player (val name: String, private val yourCardCountView: TextView) {
+class Player (private val yourCardCountView: TextView) {
 
 
-    val hand: MutableList<Card> = mutableListOf()
+    var hand: MutableList<Card> = mutableListOf()
 
 
-    fun receiveInitialCards(cards:List<Card>){
+    fun receiveInitialCards(cards: List<Card>) {
         hand.clear()
         hand.addAll(cards)
         updateCardCount()
     }
 
-    fun updateCardCount(){
+    fun updateCardCount() {
         yourCardCountView.text = "${hand.size}"
 
     }
 
-    fun playCard(): Card?{
-        if (hand.isNotEmpty()){
+    fun playCard(): Card? {
+        if (hand.isNotEmpty()) {
             val playedCard = hand.removeAt(0)
             updateCardCount()
             return playedCard
@@ -28,13 +28,19 @@ class Player (val name: String, private val yourCardCountView: TextView) {
         return null
     }
 
+    fun addToHand(cards: List<Card>) {
+        hand.addAll(cards)
+        updateCardCount()
+    }
 
-
-    fun makeMove (selectedRank: String, currentCard: Card){
+    fun makeMove(selectedRank: String, currentCard: Card) {
 
     }
 
-    fun pickUpCardsForLoserRound(cards: MutableList<Card>) {
+    fun pickUpCardsForLoserRound(cards: List<Card>) {
+        hand.addAll(cards)
+        updateCardCount()
 
     }
+
 }
