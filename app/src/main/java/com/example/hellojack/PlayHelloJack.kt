@@ -39,9 +39,9 @@ class PlayHelloJack : AppCompatActivity() {
     private var isPlayerTurn = true
     private var opponentChoice: String = ""
     private var tableCardCount: Int = 0
-    private var cardsPlayedThisRound: Int = 0
+    //private var cardsPlayedThisRound: Int = 0
     private val handler = Handler(Looper.getMainLooper())
-    private var isFirstCardShown = false
+    //private var isFirstCardShown = false
 
 
 
@@ -50,12 +50,12 @@ class PlayHelloJack : AppCompatActivity() {
         setContentView(R.layout.activity_play_hello_jack)
 
 
-        //Initialize UI elemens and the deck
+        // Initialize UI elements and the deck
         cardFrontView = findViewById(R.id.cardFrontView)
         deck = Deck()
 
 
-        //Add OnClickListener for the Show card button
+        //Add OnClickListener for the Special card-button
         val showCardButton = findViewById<Button>(R.id.showCardbutton)
         aceButton = findViewById(R.id.aceButton)
         kingButton = findViewById(R.id.kingButton)
@@ -68,7 +68,7 @@ class PlayHelloJack : AppCompatActivity() {
         onTableCardCountView = findViewById(R.id.onTableCardCountView)
 
 
-        // Add OnClickListener for each button
+        // Add OnClickListener for each Special Card-button
         aceButton.setOnClickListener { onSpecialButtonClick("ace") }
         kingButton.setOnClickListener { onSpecialButtonClick("king") }
         queenButton.setOnClickListener { onSpecialButtonClick("queen") }
@@ -76,10 +76,10 @@ class PlayHelloJack : AppCompatActivity() {
         buttonFor10.setOnClickListener { onSpecialButtonClick("10") }
 
         table = Table()
-        opponent = Opponent("Opponent", opponentCardCountView)
+        opponent = Opponent(opponentCardCountView)
         opponent.setTable(table)
 
-        player = Player("Du", yourCardCountView)
+        player = Player (yourCardCountView)
         dealInitialCards()
 
         //placeCardOnTable()
@@ -182,14 +182,29 @@ class PlayHelloJack : AppCompatActivity() {
             }
             showToast(message)
 
+            //New test for pick up the cards on table
+            if (isPlayerTurn) {
+                player.addToHand (table.cards)
+                    yourCardCountView.text = "${player.hand.size}"
+                }else {
+                opponent.addToHand(table.cards)
+                opponentCardCountView.text = "${opponent.hand.size}"
+
+                }
+
+                table.clearTable()
+                onTableCardCountView.text = "0"
+
         } else {
             // Player or opponent pressed the wrong button
             val message = if (isPlayerTurn) {
-                "You weren't fast enough! You get to pick up all the cards!"
+                "To slow, You have to pick up the cards on the table"
             } else {
-                "Opponent wasn't fast enough! They get to pick up all the cards!"
+                "Opponent were to slow, they have to pick up the cards on the table"
             }
             showToast(message)
+
+            pickUpTheCardsForLoserRound()
         }
 
         // Update Boolean for who´s turn it is
@@ -289,18 +304,18 @@ class PlayHelloJack : AppCompatActivity() {
 
 
 
-//    private fun pickUpCardsForLoserOfRound(){
-//        showToast("Player who pressed last gets to pick up the cards")
-//        if (lastSpecialCardPresser == "Player"){
-//            player.pickUpCardsForLoserRound(table.cards)
-//            yourCardCountView.text = "${player.hand.size}"
-//        } else if (lastSpecialCardPresser =="Opponent"){
-//            opponent.pickUpCardsForLoserRound(table.cards)
-//            opponentCardCountView.text = "${opponent.hand.size}"
-//        }
-//        table.clearTable()
-//        onTableCardCountView.text = "0"
-//
-//    }
+    private fun pickUpTheCardsForLoserRound(){
+
+        if (isPlayerTurn){
+            player.pickUpCardsForLoserRound(table.cards)
+            yourCardCountView.text = "${player.hand.size}"
+        } else {
+            opponent.pickUpCardsForLoserRound(table.cards)
+            opponentCardCountView.text = "${opponent.hand.size}"
+        }
+        table.clearTable()
+        onTableCardCountView.text = "0"
+
+    }
 
 }

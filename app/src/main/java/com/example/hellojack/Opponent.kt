@@ -2,10 +2,16 @@ package com.example.hellojack
 
 import android.widget.TextView
 
-class Opponent (val name: String, private val opponentCardCountView: TextView) {
+class Opponent (private val opponentCardCountView: TextView) {
 
-    val hand: MutableList<Card> = mutableListOf()
-    private  lateinit var table: Table
+    var hand: MutableList<Card> = mutableListOf()
+    private lateinit var table: Table
+
+
+    fun addToHand(cards: List<Card>){
+        hand.addAll(cards)
+        updateCardCount()
+    }
 
 
     fun setTable (table: Table){
@@ -32,7 +38,9 @@ class Opponent (val name: String, private val opponentCardCountView: TextView) {
         }
         return null
     }
-    fun pickUpCardsForLoserRound(cards: MutableList<Card>) {
+    fun pickUpCardsForLoserRound(cards: List<Card>) {
+        hand.addAll(cards)
+        updateCardCount()
 
     }
 }
