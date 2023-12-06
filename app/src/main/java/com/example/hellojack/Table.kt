@@ -10,8 +10,4 @@ class Table {
     fun clearTable(){
         cards.clear()
     }
-
-
-
-
 }
