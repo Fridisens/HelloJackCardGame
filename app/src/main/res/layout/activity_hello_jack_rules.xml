@@ -145,7 +145,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="76dp"
         android:fontFamily="sans-serif-medium"
-        android:text="No more cars? You win the game!"
+        android:text="No more cards? You win the game!"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"

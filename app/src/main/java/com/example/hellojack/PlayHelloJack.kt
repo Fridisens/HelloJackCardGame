@@ -1,6 +1,7 @@
 package com.example.hellojack
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -41,6 +42,7 @@ class PlayHelloJack : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play_hello_jack)
@@ -89,7 +91,7 @@ class PlayHelloJack : AppCompatActivity() {
                     currentCard.rank == "jack" || currentCard.rank == "queen" ||
                     currentCard.rank == "king"
                 ) {
-                    // Show the buttons for special cards
+                    // Show the buttons for special cards and stop the game at a special card
                     playerLastCardSpecial = true
                     showSpecialButtons()
                     return@setOnClickListener
@@ -99,6 +101,7 @@ class PlayHelloJack : AppCompatActivity() {
                     hideSpecialButtons()
                 }
             }
+
             playerLastCardSpecial = false
 
             // Update UI after my own move
@@ -110,21 +113,10 @@ class PlayHelloJack : AppCompatActivity() {
                 checkForWinner()
                 return@setOnClickListener
             }
-            // delay opponents move to hit a special card-button between 1-10 sec
-            val delayInMillis = (1..5).random() * 1000L
 
-
-            //onTableCardCountView.text = "${table.cards.size}"
-
-            // Place the card with 1 sec delay from players move
+            // Opponents move with 2 sec delay after my move
             handler.postDelayed({
                 onTableCardCountView.text = "${table.cards.size}"
-
-                // Opponents move with delay
-                handler.postDelayed({
-
-                    //replaceAndShowCard()
-
 
                     // Replace the current card and update the card´s image
                     replaceAndShowCard()
@@ -148,20 +140,16 @@ class PlayHelloJack : AppCompatActivity() {
                     onTableCardCountView.text = "${table.cards.size}"
                     opponentCardCountView.text = "${opponent.hand.size}"
 
-                    handler.postDelayed({
-
-                    }, delayInMillis)
-                }, 1000)
-            }, 1000)
-            //}
+            }, 2000)
         }
     }
 
     // Handle button click for special cards
     private fun onSpecialButtonClick(rank: String) {
-        val latestCard = deck.cards.lastOrNull()
+        val latestCard = currentCard
 
         if (latestCard != null && latestCard.rank == rank && ::currentCard.isInitialized) {
+
             // Player or opponent pressed the right button
             val message = if (isPlayerTurn) {
                 "You pressed the button for $rank and were the fastest!"
@@ -170,18 +158,7 @@ class PlayHelloJack : AppCompatActivity() {
             }
             showToast(message)
 
-            //New test for pick up the cards on table
-            if (isPlayerTurn) {
-                player.addToHand (table.cards)
-                yourCardCountView.text = "${player.hand.size}"
-            }else {
-                opponent.addToHand(table.cards)
-                opponentCardCountView.text = "${opponent.hand.size}"
-
-            }
-
-            table.clearTable()
-            onTableCardCountView.text = "0"
+            pickUpTheCardsForLoserRound()
 
         } else {
             // Player or opponent pressed the wrong button
@@ -281,7 +258,7 @@ class PlayHelloJack : AppCompatActivity() {
 
     private fun pickUpTheCardsForLoserRound(){
 
-        if (isPlayerTurn){
+        if (!isPlayerTurn){
             player.pickUpCardsForLoserRound(table.cards)
             yourCardCountView.text = "${player.hand.size}"
         } else {
@@ -302,5 +279,4 @@ class PlayHelloJack : AppCompatActivity() {
             finish()
         }
     }
-
 }
