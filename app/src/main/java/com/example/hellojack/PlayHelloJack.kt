@@ -1,7 +1,6 @@
 package com.example.hellojack
 
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -42,7 +41,6 @@ class PlayHelloJack : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
 
-    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play_hello_jack)
@@ -231,7 +229,6 @@ class PlayHelloJack : AppCompatActivity() {
 
     }
 
-
     //Handles players move, updating players card and table count
     private fun placeCardOnTablePlayer(){
         val playedCard = player.playCard()
@@ -241,7 +238,6 @@ class PlayHelloJack : AppCompatActivity() {
             yourCardCountView.text = "${player.hand.size}"
             onTableCardCountView.text = "${table.cards.size}"
         }
-
 
     }
 
