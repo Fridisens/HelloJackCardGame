@@ -116,27 +116,27 @@ class PlayHelloJack : AppCompatActivity() {
             handler.postDelayed({
                 onTableCardCountView.text = "${table.cards.size}"
 
-                    // Replace the current card and update the card´s image
-                    replaceAndShowCard()
-                    placeCardOnTableOpponent()
+                // Replace the current card and update the card´s image
+                replaceAndShowCard()
+                placeCardOnTableOpponent()
 
-                    // Check if the new card is a special card
-                    if (currentCard.rank == "ace" || currentCard.rank == "10" ||
-                        currentCard.rank == "jack" || currentCard.rank == "queen" ||
-                        currentCard.rank == "king"
-                    ) {
-                        // Show the buttons for special cards
-                        showSpecialButtons()
-                    } else {
-                        // Hide the buttons for special cards
-                        hideSpecialButtons()
-                    }
+                // Check if the new card is a special card
+                if (currentCard.rank == "ace" || currentCard.rank == "10" ||
+                    currentCard.rank == "jack" || currentCard.rank == "queen" ||
+                    currentCard.rank == "king"
+                ) {
+                    // Show the buttons for special cards
+                    showSpecialButtons()
+                } else {
+                    // Hide the buttons for special cards
+                    hideSpecialButtons()
+                }
 
-                    checkForWinner()
+                checkForWinner()
 
-                    // Uppdatera UI efter motståndarens drag
-                    onTableCardCountView.text = "${table.cards.size}"
-                    opponentCardCountView.text = "${opponent.hand.size}"
+                // Uppdatera UI efter motståndarens drag
+                onTableCardCountView.text = "${table.cards.size}"
+                opponentCardCountView.text = "${opponent.hand.size}"
 
             }, 2000)
         }
